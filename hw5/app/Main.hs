@@ -12,9 +12,12 @@ import System.Console.Haskeline
 import System.IO
 import Text.Megaparsec.Error (errorBundlePretty)
 
+
+-- | Settings for the Haskeline library.
 mySettings :: Settings IO
 mySettings = defaultSettings {historyFile = Just "history"}
 
+-- | Prints Prettyprinter 'Doc' to stdout.
 render :: Doc AnsiStyle -> IO ()
 render = renderIO System.IO.stdout . layoutSmart defaultLayoutOptions
 
@@ -22,6 +25,7 @@ main :: IO ()
 main = do
   runInputT mySettings loop
 
+-- | The main loop of the REPL.
 loop :: InputT IO ()
 loop = do
   maybeLine <- getInputLine "hi> "

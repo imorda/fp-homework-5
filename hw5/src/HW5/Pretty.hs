@@ -1,7 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module HW5.Pretty
-  ( prettyValue
+  ( 
+  -- * Pretty-printing
+  -- | This module provides a pretty-printer for the 'HiExpr' datatype.
+    prettyValue
   , prettyExpr
   ) where
 
@@ -22,6 +25,7 @@ import HW5.Base
 import Numeric (showHex)
 import Text.Casing
 
+-- | Pretty-print 'HiExpr' as a Prettyprinter 'Doc'.
 prettyExpr :: HiExpr -> Doc AnsiStyle
 prettyExpr (HiExprValue x) = prettyValue x
 prettyExpr (HiExprRun x) = prettyExpr x <> "!"
@@ -34,6 +38,7 @@ prettyExpr (HiExprApply func args) = vsep
   ["(" <> align (prettyExpr func) <> ")"
   , "[" <> align (vsep (map prettyExpr args)) <> "]"]
 
+-- | Pretty-print 'HiValue' as a Prettyprinter 'Doc'.
 prettyValue :: HiValue -> Doc AnsiStyle
 prettyValue (HiValueNumber x)
   | denominator x == 1 = pretty $ numerator x
@@ -60,6 +65,7 @@ prettyValue (HiValueDict x) = "{"
     [prettyValue key <> ":" <+> prettyValue value]) x)
   <+> "}"
 
+-- | Pretty-print 'HiAction' as a Prettyprinter 'Doc'.
 prettyAction :: HiAction -> Doc AnsiStyle
 prettyAction (HiActionRead x) = "read(" <> viaShow x <> ")"
 prettyAction (HiActionWrite x y) = "write(" <> viaShow x <> ", "
@@ -71,6 +77,7 @@ prettyAction HiActionNow = "now"
 prettyAction (HiActionRand x y) = "rand(" <+> pretty x <> ", " <> pretty y <+> ")"
 prettyAction (HiActionEcho x) = "echo(" <> viaShow x <> ")"
 
+-- | Convert a 'Word8' byte to a hexadecimal 'String' with fixed length of 2.
 word8ToHex :: Word8 -> String
 word8ToHex = prependIfNeeded . flip showHex ""
   where

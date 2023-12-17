@@ -3,7 +3,9 @@
 {-# LANGUAGE DerivingStrategies #-}
 
 module HW5.Base
-  ( HiError(..)
+  ( 
+  -- * Hi language types
+    HiError(..)
   , HiExpr(..)
   , HiFun(..)
   , HiValue(..)
@@ -20,6 +22,7 @@ import qualified Data.Text as T
 import Data.Time.Clock
 import GHC.Generics
 
+-- | Function names.
 data HiFun =
     HiFunDiv
   | HiFunMul
@@ -75,6 +78,7 @@ data HiFun =
   deriving (Show, Eq, Ord, Generic)
   deriving anyclass (Serialise)
 
+-- | Hi language values.
 data HiValue =
     HiValueBool Bool
   | HiValueNumber Data.Ratio.Rational
@@ -89,6 +93,7 @@ data HiValue =
   deriving (Show, Eq, Ord, Generic)
   deriving anyclass (Serialise)
 
+-- | Hi language expressions. Represents the evaluable abstract syntax tree.
 data HiExpr =
     HiExprValue HiValue
   | HiExprApply HiExpr [HiExpr]
@@ -96,6 +101,7 @@ data HiExpr =
   | HiExprDict [(HiExpr, HiExpr)]
   deriving Show
 
+-- | Hi language evaluation errors.
 data HiError =
     HiErrorInvalidArgument
   | HiErrorInvalidFunction
@@ -103,6 +109,7 @@ data HiError =
   | HiErrorDivideByZero
   deriving (Show, Eq)
 
+-- | Hi language actions. Support permission control. Enables IO.
 data HiAction =
     HiActionRead  FilePath
   | HiActionWrite FilePath B.ByteString
@@ -115,5 +122,6 @@ data HiAction =
   deriving (Show, Eq, Ord, Generic)
   deriving anyclass (Serialise)
 
+-- | Hi language monad for actions.
 class Monad m => HiMonad m where
   runAction :: HiAction -> m HiValue
