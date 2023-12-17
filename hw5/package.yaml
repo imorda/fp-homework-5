@@ -37,6 +37,18 @@ library:
     - megaparsec
     - prettyprinter
     - prettyprinter-ansi-terminal
+    - parser-combinators
+    - scientific
+    - casing
+    - text
+    - containers
+    - bytestring
+    - zlib
+    - serialise
+    - transformers
+    - directory
+    - time
+    - random
 
 executables:
   hi:
@@ -48,6 +60,12 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - hw5
+    - megaparsec
+    - haskeline
+    - prettyprinter
+    - prettyprinter-ansi-terminal
+    - mtl
+    - containers
 
 tests:
   hw5-test:
