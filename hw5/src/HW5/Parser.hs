@@ -179,7 +179,8 @@ operatorTable =
     , InfixN $ pInfix "/=" HiFunNotEquals
     ]
   , [ InfixR $ pInfix "&&" HiFunAnd
-    , InfixR $ pInfix "||" HiFunOr
+    ]
+  , [ InfixR $ pInfix "||" HiFunOr
     ]
   ]
 
