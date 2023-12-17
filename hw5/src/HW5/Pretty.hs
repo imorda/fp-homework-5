@@ -26,6 +26,7 @@ import Numeric (showHex)
 import Text.Casing
 
 -- | Pretty-print 'HiExpr' as a Prettyprinter 'Doc'.
+-- Visualises the AST
 prettyExpr :: HiExpr -> Doc AnsiStyle
 prettyExpr (HiExprValue x) = prettyValue x
 prettyExpr (HiExprRun x) = prettyExpr x <> "!"
@@ -58,7 +59,7 @@ prettyValue (HiValueList lst) = "["
   <> hsep (punctuate comma $ map prettyValue $ toList lst) <> "]"
 prettyValue (HiValueBytes x) = "[#" <+>
   hsep (map (pretty . word8ToHex) $ B.unpack x) <+> "#]"
-prettyValue (HiValueAction x) = "`" <> prettyAction x <> "`"
+prettyValue (HiValueAction x) = prettyAction x
 prettyValue (HiValueTime x) = "parse-time(\"" <> viaShow x <> "\")"
 prettyValue (HiValueDict x) = "{"
   <+> hsep (punctuate comma $ Map.foldMapWithKey (\key value ->
