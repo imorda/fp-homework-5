@@ -178,8 +178,8 @@ invoke HiFunRange args = binaryOperation numeric numeric HiValueList args \lhs r
   if rhs < lhs then Seq.empty else
     Seq.fromFunction (truncate $ rhs - lhs + 1) (HiValueNumber . (lhs +) . toRational)
 invoke HiFunFold args = binaryCheckedOperation function list id args $ \func foldable ->
-    hiFoldM1 (\a b -> withExceptT (transformE HiErrorArityMismatch HiErrorInvalidArgument) $
-    invoke func [a, b]) $ toList foldable
+    withExceptT (transformE HiErrorArityMismatch HiErrorInvalidArgument) $
+    hiFoldM1 (\a b -> invoke func [a, b]) $ toList foldable
 
 invoke HiFunPackBytes args = unary args >>= (list >=> (mapM
    (integral >=> assert (numBetween 0 255) HiErrorInvalidArgument) >=>
@@ -248,7 +248,9 @@ hiFoldM1 :: HiMonad m
          -> [HiValue]
          -> ExceptT HiError m HiValue
 hiFoldM1 _ []      = throwE HiErrorInvalidArgument
-hiFoldM1 f [x]     = f HiValueNull HiValueNull >> return x  -- This is totally pure, so everything is safe
+hiFoldM1 f [x]     = mapExceptT (fmap $ \case
+  Left HiErrorArityMismatch -> Left HiErrorArityMismatch
+  _                         -> Right x) $ f HiValueNull HiValueNull
 hiFoldM1 f (x: xs) = foldM f x xs
 
 binaryOperation :: HiMonad m
