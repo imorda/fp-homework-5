@@ -35,7 +35,7 @@ loop = do
         Right expr -> do
           let permissions = fromList [AllowRead, AllowWrite, AllowTime]
           result <- lift $ runHIO (eval expr) permissions
-          lift $ render $ vsep [prettyExpr expr, emptyDoc, case result of
+          lift $ render $ vsep [case result of
               Left err  -> pretty "Eval error:" <+> viaShow err
               Right val -> prettyValue val, emptyDoc]
         Left err -> lift $ render $ vsep [pretty "Parse error:", pretty $ errorBundlePretty err]
