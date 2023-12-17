@@ -243,9 +243,12 @@ transformE from to orig
   | orig == from = to
   | otherwise = orig
 
-hiFoldM1 :: HiMonad m => (a -> a -> ExceptT HiError m a) -> [a] -> ExceptT HiError m a
+hiFoldM1 :: HiMonad m
+         => (HiValue -> HiValue -> ExceptT HiError m HiValue)
+         -> [HiValue]
+         -> ExceptT HiError m HiValue
 hiFoldM1 _ []      = throwE HiErrorInvalidArgument
-hiFoldM1 f [x]     = f x x >> return x  -- This is totally pure, so everything is safe
+hiFoldM1 f [x]     = f HiValueNull HiValueNull >> return x  -- This is totally pure, so everything is safe
 hiFoldM1 f (x: xs) = foldM f x xs
 
 binaryOperation :: HiMonad m
